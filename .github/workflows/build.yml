@@ -26,13 +26,13 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y wget unzip build-essential git
+        sudo apt-get install -y wget unzip build-essential
 
-    - name: Download p7zip source code
+    - name: Download p7zip source code from SourceForge
       run: |
-        git clone https://github.com/jinfeihan57/p7zip.git
-        cd p7zip
-        git checkout master
+        wget https://downloads.sourceforge.net/project/p7zip/p7zip/16.02/p7zip_16.02_src_all.tar.bz2
+        tar -xjf p7zip_16.02_src_all.tar.bz2
+        cd p7zip_16.02
 
     - name: Download Android NDK
       run: |
@@ -53,11 +53,11 @@ jobs:
 
     - name: Compile 7-Zip (p7zip)
       run: |
-        cd p7zip
+        cd p7zip_16.02
         make TARGET_CPU=ARM64 CC=$CC CXX=$CXX AR=$AR AS=$AS LD=$LD RANLIB=$RANLIB STRIP=$STRIP CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}"
 
     - name: Upload compiled binary
       uses: actions/upload-artifact@v3
       with:
         name: 7zip-arm64
-        path: ./p7zip/bin/7z
+        path: ./p7zip_16.02/bin/7z
